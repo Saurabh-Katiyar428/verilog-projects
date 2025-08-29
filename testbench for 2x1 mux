@@ -1,0 +1,12 @@
+module testbench;
+reg [0:1]a;reg s;wire y;
+mux uut(.a(a),.s(s),.y(y));
+initial begin
+$monitor($time,"a[0]=%b,a[1]=%b,s=%b,y=%b",a[1],a[0],s,y);
+#5a=2'b01;s=0;
+#5a=2'b01;s=1;
+#5a=2'b10;s=0;
+#5a=2'b10;s=1;
+#5 $finish;
+end
+endmodule
