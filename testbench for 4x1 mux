@@ -1,0 +1,20 @@
+
+module testbench;
+// Declaring signals to connect to the device under uut
+reg [0:3]i_data; reg [1:0]i_sel; wire o_out;
+//Insatntiatio or mapping 
+mux_4x1 uut(.i_data(i_data),.i_sel(i_sel),.o_out(o_out));
+initial begin
+i_data=4'b1010;
+i_sel=2'b00;
+$monitor($time,"i_data=%b,i_sel=%b,o_out=%b",i_data,i_sel,o_out);
+#5
+i_sel=2'b01;
+#5
+i_sel=2'b10;
+#5
+i_sel=2'b11;
+#5
+$finish;
+end
+endmodule
