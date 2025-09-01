@@ -1,0 +1,22 @@
+module mux_4x1(
+    input  [0:3] i_data,
+    input  [1:0] i_sel,
+    output o_out
+);
+
+reg o_out_reg;
+
+always @(*) begin
+    if (i_sel == 2'b00) begin
+        o_out_reg = i_data[0];
+    end else if (i_sel == 2'b01) begin
+        o_out_reg = i_data[1];
+    end else if (i_sel == 2'b10) begin
+        o_out_reg = i_data[2];
+    end else begin // i_sel == 2'b11
+        o_out_reg = i_data[3];
+    end
+end
+assign o_out = o_out_reg;
+
+endmodule
