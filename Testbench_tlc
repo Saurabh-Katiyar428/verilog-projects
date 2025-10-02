@@ -1,0 +1,31 @@
+`timescale 1ns / 1ps
+module testbench;
+reg clk,rst;
+wire [2:0] light_M1;
+wire [2:0] light_MT;
+wire [2:0] light_M2;
+wire [2:0] light_S;
+
+// Instantiate the Unit Under Test (UUT)
+traffic_light_controller uut(
+    .clk(clk),
+    .rst(rst),
+    .light_M1(light_M1),
+    .light_MT(light_MT),
+    .light_M2(light_M2),
+    .light_S(light_S)
+);
+
+initial begin
+clk=1'b0;
+forever #5 clk=~clk; // 100MHz clock
+end
+
+initial begin 
+$dumpfile("traffic_light.vcd");
+$dumpvars(0, testbench);
+rst=1'b1; // Start with reset active
+#100 rst=1'b0; // Release reset after 100ns
+#2000 $finish; // Extended simulation time to see multiple cycles
+end
+endmodule
