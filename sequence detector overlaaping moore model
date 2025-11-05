@@ -1,0 +1,74 @@
+`timescale 1ns / 1ps
+
+/*Designing of 1011 sequence detector
+using Mealy model overlapping case
+*/
+module sequence_detector(
+    input clk,
+    input rst,
+    input in,
+    output reg out
+);
+    reg [1:0] ps; // ps means present state
+    parameter s0=2'b00, s1=2'b01, s10=2'b10, s101=2'b11; 
+    /*
+    s0 means nothing is detected 
+    s1 means 1 is detected
+    s10 means 10 is detected
+    s101 means 101 is detected 
+    s1011 means sequence 1011 is detected
+    */
+    
+    always@(posedge clk)begin
+        if(rst == 1'b1) 
+        begin
+            ps <= s0;
+            out <= 1'b0;
+        end 
+        else 
+        begin
+            case(ps)
+                s0: 
+                    if(in == 1'b1) begin
+                        ps <= s1;
+                        out <= 1'b0;
+                    end else begin
+                        ps <= s0;
+                        out <= 1'b0;
+                    end
+                
+                s1: 
+                    if(in == 1'b1) begin
+                        ps <= s1;
+                        out <= 1'b0;
+                    end else begin
+                        ps <= s10;
+                        out <= 1'b0;
+                    end 
+                
+                s10: 
+                    if(in == 1'b1) begin
+                        ps <= s101;
+                        out <= 1'b0;
+                    end else begin
+                        ps <= s0;
+                        out <= 1'b0;
+                    end 
+                
+                s101: 
+                    if(in == 1'b1) begin
+                        ps <= s1; // Overlapping Case: The sequence "1011" is detected, and the next possible start is '1' from "101**1**".
+                        out <= 1'b1; // Output '1' because the sequence 1011 is completed (Mealy model).
+                    end else begin
+                        ps <= s0; // Overlapping Case: The input is '0', resulting in "1010". The longest valid subsequence is **nothing**, so return to S0. (The '10' overlap only happens if the sequence was, say, '11010').
+                        out <= 1'b0; 
+                    end    
+                
+                default: begin
+                    ps <= s0;
+                    out <= 1'b0;
+                end
+            endcase 
+        end
+    end
+endmodule
